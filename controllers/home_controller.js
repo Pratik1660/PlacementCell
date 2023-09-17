@@ -1,3 +1,7 @@
+const Student = require("../models/student");
+
 module.exports.home= (req,res)=>{
-return res.render('home', {title: "Home"});
+    Student.find({})
+    .then((students)=>{return res.render('home', {title: "Home", students: students})})
+
 }

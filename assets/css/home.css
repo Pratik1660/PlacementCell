@@ -1,0 +1,46 @@
+/* Style the main title */
+h1 {
+    text-align: center;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px;
+  }
+  
+  /* Style the container */
+  .container {
+    margin-top: 20px;
+  }
+  
+  /* Style the table */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+  }
+  
+  /* Style table header cells */
+  .table th {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  /* Style table data cells */
+  .table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  /* Style the "Delete" links */
+  .table a {
+    color: #ff0000;
+    text-decoration: none;
+  }
+  
+  /* Style the "Delete" links on hover */
+  .table a:hover {
+    text-decoration: underline;
+  }
+  

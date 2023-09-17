@@ -1,0 +1,118 @@
+const CsvParser= require('json2csv').Parser;
+
+const Student = require('../models/student');
+const { name } = require('ejs');
+
+module.exports.createstudent = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      batch,
+      college,
+      placementStatus,
+      dsa,
+      react,
+      webdev,
+    } = req.body;
+
+    // check if student already exists
+    const student = await Student.findOne({ email });
+
+    if (!student) {
+      const createdStudent = await Student.create({
+        name,
+        email,
+        college,
+        batch,
+        dsa,
+        react,
+        webdev,
+        placementStatus,
+      });
+      if (createdStudent) {
+        return res.redirect('back');
+      } else {
+        return res.redirect('back');
+      }
+    } else {
+      return res.redirect('back');
+    }
+  } catch (err) {
+    console.error('Error:', err);
+    return res.status(500).send('Internal Server Error');
+  }
+};
+
+module.exports.addstudent = (req, res) => {
+  return res.render('add_student', { title: 'add student' });
+};
+
+module.exports.delete= (req,res)=>{
+  let id= req.query.id;
+
+  Student.findByIdAndDelete(id)
+  .catch((err)=>{console.log('error in deleting an object from database');
+return;})
+  .then(()=>{return res.redirect('back');})
+};
+
+
+
+// schedule interview
+module.exports.addinterview = async (req,res)=>{
+ try{
+
+  const { id, company, date } = req.body;
+  const student = await Student.findById(id);
+
+  if (student) {
+    const interview = {
+      company,
+      date,
+      result: 'Pending',
+    };
+    student.interviews.push(interview);
+    student.save();
+  }
+  return res.redirect('/');
+} catch (error) {
+  console.log(`Error in scheduling Interview: ${error}`);
+  return res.redirect('back');
+}
+ };
+
+
+ module.exports.scheduleinterview=(req, res)=>{
+  Student.find({})
+  .then((students)=>{return res.render('add_interview', {title: "add interview", students: students})})
+
+};
+
+module.exports.exportdata= async(req, res)=>{
+console.log('export startSession');
+  try{
+    let students=[];
+    var studentData= await Student.find({});
+    console.log(studentData);
+    studentData.forEach((student)=>{
+      const {id, name, email, college, batch, dsa, webdev, react, placementStatus, interviews} = student;
+      students.push({id, name, email, college, batch, dsa, webdev, react, placementStatus, interviews});
+    });
+
+    const csvFields= ['Id', 'Name', 'Email', 'College', 'Batch', 'DSA', 'Webdev', 'React', 'PlacementStatus', 'Interview'];
+    const csvParser= new CsvParser({csvFields});  
+    const csvData= csvParser.parse(students);
+
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", "attatchment: filename= studentsData.csv ");
+
+    res.status(200).end(csvData);
+
+  } catch(error){
+    res.send({status:400})
+  }
+  };
+
+
+

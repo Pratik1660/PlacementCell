@@ -1,6 +1,15 @@
 const express= require('express');
 const app= express();
+
+const CsvParser= require('json2csv').Parser;
 const port= 8000;
+
+const cookieParser= require('cookie-parser');
+app.use(express.urlencoded());
+app.use(cookieParser());
+
+const db= require('./config/mongoose');
+
 
 //use express-ejs-layouts
 const expresslayouts= require('express-ejs-layouts');
